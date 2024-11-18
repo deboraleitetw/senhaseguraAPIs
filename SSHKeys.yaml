@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Credentials API
-  description: API for managing credentials in senhasegura.
+  description: API for managing SSH keys in senhasegura.
   version: 3.0.0
 servers:
   - 
