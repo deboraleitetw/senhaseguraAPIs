@@ -1,0 +1,787 @@
+openapi: 3.0.1
+info:
+  title: Credentials API
+  description: API for managing credentials in senhasegura.
+  version: 3.0.0
+servers:
+  - 
+    url: "https://{vaultHost}"
+    description: "Vault host"
+    variables:
+      vaultHost:
+        default: "testing.km.lab.mt4.dev"
+        description: Host of the vault where the API is hosted.
+security:
+  -
+    oauth2Auth:
+      - read
+      - write
+components:
+  securitySchemes:
+    oauth2Auth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://testing.km.lab.mt4.dev/api/oauth2/token
+          scopes:
+            read: Grants read access
+            write: Grants write access
+  parameters:
+    KeyIdParam:
+      name: key_id
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+        Key:
+          type: object
+          required:
+            - ip
+            - hostname
+            - private_key
+            - public_key
+          properties:
+            ip:
+              type: string
+              example: "10.66.33.15"
+            hostname:
+              type: string
+              example: "w2016"
+            private_key:
+              type: string
+              example: |
+                -----BEGIN OPENSSH PRIVATE KEY-----
+                cTA9Vb5aA0kXaK2HEjGUWgeCBG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+                QyNTUxOQAAACCLABE9/nb3BlbnNzaC1rZXktdjEAAAAAxtPOCkR2sGccAAAAKi5DXJnuQ1y
+                ZwAAAAtzc2gtZWQyNTUxOQAAACCLABE9/cTA9VTGVpdGVGZXJyZWlyYUBIUjFTUkb5aA0kXaK2HEjGUWgeCxtPOCkR2sGccA
+                DgaNiGsvbkkkXhepU2NQi3iZ4sAET39xMD1VvloDSRdorYc
+                SMZRaB4LG084KRHawZxwAAAAI0F6dXJlQUQrRGVib3JhAAAECc20zsB7FuSJQAqhLxe
+                gzAQI=
+                -----END OPENSSH PRIVATE KEY-----
+            public_key: 
+              type: string
+              example: "ssh-ed25519 C1lZDI1NTE5AAawZxwAAAAAAC3NzaIIsAET39xdorYcSMZRaB4LG084MD1VvloDSRKRH AzureAD+DeboraLeiteFerreira@HR1SRH3"
+            username:
+              type: string
+              example: "dleite3"
+            identifier: 
+              type: string
+              example: "sshkey3"
+            enabled:
+              type: boolean
+              example: true
+            devices:
+              type: array
+              items:
+                  type: object
+                  properties:
+                    hostname:
+                      type: string
+                      example: "API device test"
+            tags:
+                type: string
+                example: "mainsskey"
+            key_name:
+              type: string
+              example: "test4"
+            password:
+              type: string
+              example: "fkjwe87a5a8fa9a"
+        Devices:
+          type: array
+          items: 
+            type: object
+            properties:
+              hostname: 
+                type: string
+                example: "API device test"
+        
+  responses:
+    CreateUpdateSSHkey:
+      description: "Response for successfully creating or updating an SSH key"
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 201
+        response:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: "Key successfully registered! / Key updated successfully!"
+            error:
+              type: boolean
+              example: false
+            error_code:
+              type: integer
+              example: 0 
+            detail:
+              type: string
+              example: ""
+        tenant:
+          type: string
+          example: "senhasegura"
+        key:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "92"
+            identifier:
+              type: string
+              example: "sshkey0"
+            devices:
+              type: array
+              items:
+                hostname:
+                  type: string
+                  example: "API device test"
+                ip:
+                  type: string
+                  example: "10.66.33.20"
+            devices_error:
+              type: object
+    Key:
+      description: "Response for successfully accessing an SSH key by {key_id}"
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        response:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: "Key 39"
+            error:
+              type: boolean
+              example: false
+            error_code:
+              type: integer
+              example: 0
+            detail:
+              type: string
+              example: ""
+        tenant:
+          type: string
+          example: "senhasegura"
+        key:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "39"
+            username:
+              type: string
+              example: "credential_5"
+            key_name:
+              type: string
+              example: "test2"
+            hostname:
+              type: string
+              example: "w2016"
+            ip:
+              type: string
+              example: "10.66.33.15"
+            private_key:
+              type: string
+              example: |
+                -----BEGIN OPENSSH PRIVATE KEY-----
+                cTA9Vb5aA0kXaK2HEjGUWgeCBG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+                QyNTUxOQAAACCLABE9/nb3BlbnNzaC1rZXktdjEAAAAAxtPOCkR2sGccAAAAKi5DXJnuQ1y
+                ZwAAAAtzc2gtZWQyNTUxOQAAACCLABE9/cTA9VTGVpdGVGZXJyZWlyYUBIUjFTUkb5aA0kXaK2HEjGUWgeCxtPOCkR2sGccA
+                DgaNiGsvbkkkXhepU2NQi3iZ4sAET39xMD1VvloDSRdorYc
+                SMZRaB4LG084KRHawZxwAAAAI0F6dXJlQUQrRGVib3JhAAAECc20zsB7FuSJQAqhLxe
+                gzAQI=
+                -----END OPENSSH PRIVATE KEY-----
+            public_key:
+              type: string
+              example: "ssh-ed25519 C1lZDI1NTE5AAawZxwAAAAAAC3NzaIIsAET39xdorYcSMZRaB4LG084MD1VvloDSRKRH AzureAD+DeboraLeiteFerreira@HR1SRH3"
+            password:
+              type: string
+              nullable: true
+              example: null
+            devices:
+              type: array
+              items:
+                type: object
+                properties:
+                  hostname:
+                    type: string
+                    example: "API device test"
+                  ip:
+                    type: string
+                    example: "10.66.33.20"
+            expiration_time:
+              type: string
+              format: date-time
+              example: "2024-06-04T12:20:19"
+    ListCredentials:
+      description: "Response for accessing a list of credentials including SSH keys"
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        response:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: "2 credentials found"
+            error:
+              type: boolean
+              example: false
+            error_code:
+              type: integer
+              example: 0
+            detail:
+              type: string
+              example: ""
+        tenant:
+          type: string
+          example: "senhasegura"
+        credentials:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: "5"
+              identifier:
+                type: string
+                example: "018fe9a6_541d_7380_99b6_56051b71a475"
+              username:
+                type: string
+                example: "credential_5"
+              expiration:
+                type: string
+                format: date-time
+                example: "2024-05-16T17:31:31-03:00"
+              change:
+                type: string
+                format: date-time
+                example: "2024-05-03 16:19:53"
+              view:
+                type: string
+                format: date-time
+                example: "2024-05-24 16:26:09"
+              hostname:
+                type: string
+                example: "gmail.com"
+              management_ip:
+                type: string
+                example: "mail.google.com"
+              type:
+                type: string
+                example: "Local User"
+              type_code:
+                type: string
+                example: "1"
+              device_model:
+                type: string
+                example: "Gmail"
+              device_type:
+                type: string
+                example: "Web Application"
+              device_vendor:
+                type: string
+                example: "Google"
+              automatic_change:
+                type: boolean
+                example: false
+              connectivity:
+                type: string
+                example: "HTTPS"
+              connectivity_code:
+                type: string
+                example: "10"
+    EnableDisableSSHkey:
+      description: "Response for successfully enabling or disabling an SSH key"
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        response:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: "Key successfully activated / Key successfully deactivated"
+            error:
+              type: boolean
+              example: false
+            error_code:
+              type: integer
+              example: 0
+            detail:
+              type: string
+              example: ""
+        tenant:
+          type: string
+          example: "senhasegura"
+    MissingRequiredParameter:
+        description: "Response for missing a required parameter"
+        type: object
+        properties:
+              code:
+                type: integer
+                example: 400
+              response:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: "1004: The device's hostname was not informed."
+                  error:
+                    type: boolean
+                    example: true
+                  error_code:
+                    type: integer
+                    example: 1004
+                  detail:
+                    type: string
+                    example: ""
+              tenant:
+                type: string
+                example: "senhasegura"
+              exception:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 1004
+                  message:
+                    type: string
+                    example: "1004: The device's hostname was not informed."
+                  detail:
+                    type: string
+                    example: ""
+    
+    ResourceSubNotFound:
+      description: "Response for incorrect URL or resource"
+      type: object
+      properties:
+              code:
+                  type: integer
+                  example: 404
+              response:
+                  type: object
+                  properties:
+                      status:
+                          type: integer
+                          example: 404
+                      message: 
+                          type: string
+                          example: "Resource sub not found"
+                      error: 
+                          type: boolean
+                          example: true
+                      error_code:
+                          type: integer
+                          example: 4
+                      detail:
+                          type: string
+                          example: ""
+              tenant:
+                  type: string
+                  example: "senhasegura"
+  
+    SSHkeyNotFound:
+      description: "Response for SSH key not found"
+      type: object
+      properties:
+              code:
+                  type: integer
+                  example: 400
+              response:
+                  type: object
+                  properties:
+                      status:
+                          type: integer
+                          example: 400
+                      message:
+                          type: string
+                          example: "1015: SSH key not found"
+                      error:
+                          type: boolean
+                          example: true
+                      error_code:
+                          type: integer
+                          example: 1
+                      detail:
+                          type: string
+                          example: ""
+              tenant:
+                  type: string
+                  example: "senhasegura"
+              exception:
+                  type: object
+                  properties:
+                      code:
+                          type: integer
+                          example: 1011
+                      message:
+                          type: string
+                          example: "1015: SSH key not found"
+                      detail:
+                          type: string
+                          nullable: true
+                          example: null
+    NoAccessToCredential:
+        description: "Response for not having permission to access the credential"
+        type: object
+        properties:
+            code:
+                type: integer
+                example: 400
+            response:
+                type: object
+                properties:
+                    status:
+                        type: integer
+                        example: 400
+                    message:
+                        type: string
+                        example: "1009: No access to credential"
+                    error:
+                        type: boolean
+                        example: true
+                    error_code:
+                        type: integer
+                        example: 1
+                    detail:
+                        type: string
+                        example: ""
+            tenant:
+                type: string
+                example: "senhasegura"
+            exception:
+                type: object
+                properties:
+                    code:
+                        type: integer
+                        example: 1011
+                    message:
+                        type: string
+                        example: "1009: No access to credential"
+                    detail:
+                        type: string
+                        nullable: true
+                        example: null
+    UnauthorizedAccessError:
+      description: "Response for forbidden access to the resource"
+      type: object
+      properties:
+                code:
+                  type: integer
+                  example: 501
+                response:
+                  type: object
+                  properties:
+                    status:
+                      type: integer
+                      example: 501
+                    message:
+                      type: string
+                      example: "You are not authorized to access this resource."
+                    error:
+                      type: boolean
+                      example: true
+                    error_code:
+                      type: integer
+                      example: 1106
+                    detail:
+                      type: string
+                      example: ""
+                tenant:
+                  type: string
+                  example: senhasegura
+
+
+    security:
+        - oauth2Auth: []
+    tags:
+        - name: PAM
+        - name: PAM > Devices
+    
+      
+
+paths:
+  /api/pam/key:
+    post:
+      tags:
+        - PAM > SSH key
+      summary: "Create or update an SSH key"
+      description: This endpoint creates or updates an SSH key in senhasegura.
+      requestBody:
+        required: true
+        content:
+            application/json:
+                schema:
+                    $ref: '#/components/schemas/Key'
+      parameters:  
+            -   name: id
+                in: query
+                required: true
+                schema:
+                    type: string
+                description: IP address of the main device associated with the SSH key.
+                example: "10.66.33.15"
+            -   name: hostname
+                in: query
+                required: true
+                schema:
+                    type: string
+                description:  Hostname of the main device associated with the SSH key.
+                example: "w2016"
+            -   name: private_key
+                in: query
+                required: true
+                schema:
+                    type: string
+                description: Private key necessary for user authentication.
+            -   name: public_key
+                in: query
+                required: true
+                schema:
+                    type: string
+                description: IP address of the device associated with the credential.
+            -   name: identifier
+                in: query
+                required: false
+                schema:
+                    type: string
+                example: sshkey3
+                description: Unique string defined by the user or by senhasegura to identify the SSH key. <br>Use only letters (`a-z`, `A-Z`), numbers (`0-9`) and the characters `-`, `_`, `.`. <br>If left blank, the system automatically generates a `UUID`based identifier.
+            -   name: username
+                in: query
+                required: false
+                schema:
+                    type: string
+                description: Username related to the key in the device.
+            -   name: enabled
+                in: query
+                required: false
+                schema:
+                    type: boolean
+                description: SSH key status.
+            -   name: devices
+                in: query
+                required: false
+                schema:
+                    $ref: '#/components/schemas/Devices'
+                description: >
+                 Additional devices associated with the SSH key, containing their hostname. <br>Note: if this field is left empty, the SSH key won't have any additional associated devices.
+            -   name: tags
+                in: query
+                required: false
+                schema:
+                    type: string
+                example: "mainsshkey"
+            -   name: key_name
+                in: query
+                required: false
+                schema: 
+                  type: string
+                example: "test4"
+            -   name: password
+                in: query
+                required: false
+                schema: 
+                  type: string
+                example: "fkjwe87a5a8fa9a"
+            
+      responses:
+        201:
+          description: Success - Credential successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/CreateUpdateSSHkey'
+        400:
+          description: Bad Request - There's a missing required parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/MissingRequiredParameter'
+        500:
+          description: Internal Server Error - You are not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/UnauthorizedAccessError'
+
+  /api/pam/credential:  
+    get:
+        tags:
+          - PAM > SSH key
+        summary: "List all credentials including SSH keys"
+        description: This endpoint lists all credentials including SSH keys in senhasegura.
+        responses:
+          200:
+            description: Success - A list of credentials.
+            content:
+              application/json:
+                schema:
+                  $ref: '#components/responses/ListCredentials'
+          404:
+            description: Not Found - Incorrect URL or resource
+            content:
+              application/json:
+                schema:
+                  $ref: '#components/responses/ResourceSubNotFound'
+          500:
+            description: Internal Server Error - You are not authorized
+            content:
+              application/json:
+                schema:
+                  $ref: '#components/responses/UnauthorizedAccessError'
+
+  /api/pam/key/{id}:
+    parameters:
+      - $ref: '#/components/parameters/KeyIdParam'
+    get:
+      tags: 
+        - PAM > SSH key
+      summary: Access an SSH key by {id}
+      description: This endpoint accesses a credential based on the `credential_id` provided.
+      responses:
+        200:
+          description: Success - A credential's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Key'
+        400:
+          description: Bad Request - Credential not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/responses/SSHkeyNotFound'
+        404:
+          description: Not Found - Incorrect URL or resource
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/ResourceSubNotFound'
+        500:
+          description: Internal Server Error - You are not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/UnauthorizedAccessError'
+    
+    put:
+      tags: 
+        - PAM > SSH key
+      summary: Enable SSH key by {id}
+      description: This endpoint enables an SSH key based on the `id` provided.
+      responses:
+        200:
+          description: Success - SSH key enabled.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/EnableDisableSSHkey'
+        400:
+          description: Bad Request - Credential not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/responses/SSHkeyNotFound'
+        404:
+          description: Not Found - Incorrect URL or resource
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/ResourceSubNotFound'
+        500:
+          description: Internal Server Error - You are not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/UnauthorizedAccessError'
+    
+    delete:
+      tags: 
+        - PAM > SSH key
+      summary: Disable SSH key by {id}
+      description: This endpoint disables an SSH key based on the `id` provided.
+      responses:
+        200:
+          description: Success - SSH key disabled.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/EnableDisableSSHkey'
+        400:
+          description: Bad Request - SSH key not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/responses/SSHkeyNotFound'
+        404:
+          description: Not Found - Incorrect URL or resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/ResourceSubNotFound'
+        500:
+          description: Internal Server Error - You are not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/UnauthorizedAccessError'
+  
+  
+
+ 
+
+  
+
+
+
+
+
+
+
+        
+
+
+
+
+             
+
+
+
+          
+
+            
+
+            
+
+     
+
+
+                            

@@ -1,0 +1,636 @@
+openapi: 3.0.1
+info:
+  title: Devices API
+  description: API for managing devices in senhasegura.
+  version: 3.0.0
+servers:
+  - 
+    url: "https://{vaultHost}"
+    description: "Vault host"
+    variables:
+      vaultHost:
+        default: "testing.km.lab.mt4.dev"
+        description: Host of the vault where the API is hosted.
+security:
+  -
+    oauth2Auth:
+      - read
+      - write
+components:
+  securitySchemes:
+    oauth2Auth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://testing.km.lab.mt4.dev/api/oauth2/token
+          scopes:
+            read: Grants read access
+            write: Grants write access
+  schemas:
+    Device:
+      type: object
+      properties:
+        hostname:
+          type: string
+          description: "Device's hostname."
+          example: "API device test"
+        ip:
+          type: string
+          description: "Device's IP address."
+          example: "10.66.33.120"
+        type:
+          type: string
+          description: "Device's type. Must be an existing type in senhasegura."
+          example: "Gmail"
+        vendor:
+          type: string
+          description: "Device's vendor. A new vendor is created if the value is unique."
+          example: "Desktop"
+        model:
+          type: string
+          description: "Device's model. A new model is created if the value is unique."
+          example: "Linux"
+        site:
+          type: string
+          description: "Device's location site. A new site is created if the value is unique."
+          example: "AWS"
+  parameters:
+    DeviceIdParam:
+        name: device_id
+        in: path
+        required: true
+        schema:
+            type: string
+
+  responses:
+    CreateUpdateDevices:
+        description: "Response for successfully creating or updating a device"
+        type: object
+        properties:
+            code:
+                type: integer
+                example: 201
+            response:
+                type: object
+                properties:
+                    status:
+                        type: integer
+                        example: 201
+                    message:
+                        type: string
+                        example: Device successfully registered! / Device updated successfully!
+                    error:
+                        type: boolean
+                        example: false
+                    error_code:
+                        type: integer
+                        example: 0
+                    detail:
+                        type: string
+                        example: ""
+                tenant:
+                    type: string
+                    example: "senhasegura"
+                devices:
+                    type: object
+                    properties:
+                        id:
+                            type: string
+                            example: "14"
+                        hostname:
+                            type: string
+                            example: "API device"
+                        ip:
+                            type: string
+                            example: "10.66.33.17"
+                        model:
+                            type: string
+                            example: "Gmail"
+                        type:
+                            type: string
+                            example: "Desktop"
+                        vendor:
+                            type: string
+                            example: "Linux"
+                        site:
+                            type: string
+                            example: "AWS"
+                        device_domain:
+                            type: string
+                            example: "my_device_domain"
+                        connectivities:
+                            type: string
+                            example: "HTTP:80, SSH:22"
+                        session_remote_config:
+                            type: string
+                            example: "HTTP::"
+                        device_tags:
+                            type: string
+                            example: "test"
+    Device:
+        description: "Response for successfully accessing a device by {device_id}"
+        type: object
+        properties:
+            code:
+                type: integer
+                example: 200
+            response:
+                type: object
+                properties:
+                    status:
+                        type: integer
+                        example: 200
+                    message:
+                        type: string
+                        example: "Device 1"
+                    error:
+                        type: boolean
+                        example: false
+                    error_code:
+                        type: integer
+                        example: 0
+                    detail:
+                        type: string
+                        example: ""
+            tenant:
+              type: string
+              example: "senhasegura"
+            devices:
+                type: array
+                items:
+                    type: object
+                    properties:
+                        id:
+                            type: string
+                            example: 1
+                        hostname:
+                            type: string
+                            example: "mydevicehostname"
+                        ip:
+                            type: string
+                            example: "172.10.20.30"
+                        model:
+                            type: string
+                            example: "Windows server 2012"
+                        type:
+                            type: string
+                            example: "Server"
+                        vendor:
+                            type: string
+                            example: "Microsoft"
+                        site:
+                            type: string
+                            example: "LAX"
+                        device_domain:
+                            type: string
+                            example: ""
+                        connectivities:
+                            type: string
+                            example: "Telnet:23,SSH:22"
+                        session_remote_config:
+                            type: string
+                            example: ""
+                        device_tags:
+                            type: string
+                            example: "tag1,tag2"
+    ListDevices:
+        description: "Response for successfully accessing a list of devices"
+        type: object
+        properties:
+            code:
+                type: integer
+                example: 200
+            response:
+                type: object
+                properties:
+                    status:
+                        type: integer
+                        example: 200
+                    message:
+                        type: string
+                        example: 2 devices found
+                    error:
+                        type: boolean
+                        example: false
+                    error_code:
+                        type: integer
+                        example: 0
+                    detail:
+                        type: string
+                        example: ""
+            tenant:
+              type: string
+              example: "senhasegura"
+            devices:
+                type: array
+                items:
+                    type: object
+                    properties:
+                        id:
+                            type: string
+                            example: 1
+                        hostname:
+                            type: string
+                            example: "mydevicehostname"
+                        ip:
+                            type: string
+                            example: "172.10.20.30"
+                        model:
+                            type: string
+                            example: "Windows server 2012"
+                        type:
+                            type: string
+                            example: "Server"
+                        vendor:
+                            type: string
+                            example: "Microsoft"
+                        site:
+                            type: string
+                            example: "LAX"
+                        tags:
+                            type: string
+                            example: "tag1,tag2"  
+    Success:
+      description: "Response for successfully enabling or disabling a device"  
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        response:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Device successfully deactivated / Device successfully activated
+            error:
+              type: boolean
+              example: false
+            error_code:
+              type: integer
+              example: 0
+            detail:
+              type: string
+              example: null
+        tenant:
+            type: string
+            example: "senhasegura"
+    MissingRequiredParameter:
+      description: "Response for missing a required parameter"
+      type: object
+      properties:
+              code:
+                type: integer
+                example: 400
+              response:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: "1004: The device's hostname was not informed."
+                  error:
+                    type: boolean
+                    example: true
+                  error_code:
+                    type: integer
+                    example: 1004
+                  detail:
+                    type: string
+                    example: ""
+              tenant:
+                type: string
+                example: "senhasegura"
+              exception:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 1004
+                  message:
+                    type: string
+                    example: "1004: The device's hostname was not informed."
+                  detail:
+                    type: string
+                    example: ""
+    ResourceSubNotFound:
+        description: "Response for incorrect URL or resource"
+        type: object
+        properties:
+            code:
+                type: integer
+                example: 404
+            response:
+                type: object
+                properties:
+                    status:
+                        type: integer
+                        example: 404
+                    message: 
+                        type: string
+                        example: "Resource sub not found"
+                    error: 
+                        type: boolean
+                        example: true
+                    error_code:
+                        type: integer
+                        example: 4
+                    detail:
+                        type: string
+                        example: ""
+            tenant:
+                type: string
+                example: "senhasegura"
+    DeviceNotFound:
+        description: "Response for device not found"
+        type: object
+        properties:
+            code:
+                type: integer
+                example: 400
+            response:
+                type: object
+                properties:
+                    status:
+                        type: integer
+                        example: 400
+                    message:
+                        type: string
+                        example: "1011: Device not found"
+                    error:
+                        type: boolean
+                        example: true
+                    error_code:
+                        type: integer
+                        example: 1
+                    detail:
+                        type: string
+                        example: ""
+            tenant:
+                type: string
+                example: "senhasegura"
+            exception:
+                type: object
+                properties:
+                    code:
+                        type: integer
+                        example: 1011
+                    message:
+                        type: string
+                        example: "1011: Device not found"
+                    detail:
+                        type: string
+                        nullable: true
+                        example: null
+      
+    UnauthorizedAccessError:
+      description: "Response for forbidden access to the resource"
+      type: object
+      properties:
+              code:
+                type: integer
+                example: 501
+              response:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 501
+                  message:
+                    type: string
+                    example: "You are not authorized to access this resource."
+                  error:
+                    type: boolean
+                    example: true
+                  error_code:
+                    type: integer
+                    example: 1106
+                  detail:
+                    type: string
+                    example: ""
+              tenant:
+                type: string
+                example: senhasegura
+    security:
+        - oauth2Auth: []
+    tags:
+        - name: PAM
+        - name: PAM > Devices
+
+paths:
+  /api/pam/device:
+    post:
+      tags:
+        - PAM > Devices
+      summary: Create or Update device
+      description: This endpoint creates or updates a device in senhasegura.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+      parameters:
+        - name: hostname
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Device's hostname"
+          example: "API device test"
+        - name: ip
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Device's IP address"
+          example: "10.66.33.17"
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Device's type. Must be an existing type"
+          example: "Desktop"
+        - name: vendor
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Device's vendor. A new one is created if value is unique"
+          example: "Linux"
+        - name: model
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Device's model. A new one is created if value is unique"
+          example: "Gmail"
+        - name: site
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "Device's location site. A new one is created if value is unique"
+          example: "AWS"
+        - name: device_domain
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Device's domain. Only existing domains are accepted. <br>If listing more than one, separate them with commas without a space between them"
+          example: "testlab.com,demo.lab.com"
+        - name: device_tags
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Keywords associated with device"
+          example: "windows, lab"
+        - name: connectivities
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Device's connectivities"
+          example: "RDP:3389"
+      responses:
+        201:
+            description: Success - Device successfully created
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/responses/CreateUpdateDevices'
+        400:
+            description: Bad request - There's a missing required parameter
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/responses/MissingRequiredParameter'
+        404:
+            description: Not found - Resource sub not found
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/responses/ResourceSubNotFound'
+        500:
+            description: Internal server error - You are not authorized
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/responses/UnauthorizedAccessError'
+    get:
+        tags:
+            - PAM > Devices
+        summary: List all devices
+        description: This endpoint lists all devices in senhasegura.
+        responses:
+            200:
+                description: Success - A list of devices.
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/responses/ListDevices'
+
+            404:
+                description: Not Found - Resource sub not found
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/responses/ResourceSubNotFound'
+            500:
+                description: Internal server error - You are not authorized
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/responses/UnauthorizedAccessError'
+
+  /api/pam/device/{device_id}:
+    parameters:
+      - $ref: '#/components/parameters/DeviceIdParam' 
+    get:
+        tags: 
+            - PAM > Devices
+        summary: Access device by {device_id}
+        description: This endpoint access a device based on the `device_id` provided.
+        responses:
+            200:
+                description: Success - - A device's data.
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/responses/Device'
+            400:
+                description: Device not found
+                content:
+                    application/json:
+                        schema:
+                             $ref: '#/components/responses/DeviceNotFound'
+            500:
+                description: Internal server error - You are not authorized
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/responses/UnauthorizedAccessError'                        
+
+
+    put:
+        tags:
+            - PAM > Devices
+        summary: Enable device by {device_id}
+        description: This endpoint enables a device based on the `credential_id` provided.
+        responses:
+            200:
+                description: Success - Device enabled.
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/responses/Success'
+            400:
+                description: Device not found
+                content:
+                    application/json:
+                        schema:
+                           $ref: '#/components/responses/DeviceNotFound'
+            500:
+                description: Internal server error - You are not authorized
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/responses/UnauthorizedAccessError'
+    delete:
+        tags:
+            - PAM > Devices
+        summary: Disable device by {device_id}
+        responses:
+            200:
+                description: Successful response
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/responses/Success'
+            400:
+                description: Device not found
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/responses/DeviceNotFound'
+            500:
+                description: Internal server error - You are not authorized
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/responses/UnauthorizedAccessError'
+        
+                    
+
+            
+
+
+    
+                
